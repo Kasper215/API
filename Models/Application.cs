@@ -30,4 +30,14 @@ namespace WebApplication1.Models
     {
         public bool Confirm { get; set; }
     }
+
+    /// <summary>
+    /// Модель ответа от API партнера (одногруппника)
+    /// </summary>
+    public class ValidationResult
+    {
+        public bool IsValid { get; set; }
+        public string? Message { get; set; }
+        public int RecommendedBonus { get; set; }
+    }
 }

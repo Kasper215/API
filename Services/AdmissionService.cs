@@ -30,6 +30,16 @@ namespace WebApplication1.Services
         public Task<List<Applicant>> GetApplicantsAsync() => Task.FromResult(Applicants);
 
         /// <summary>
+        /// Создание нового абитуриента
+        /// </summary>
+        public Task<Applicant> CreateApplicantAsync(Applicant applicant)
+        {
+            applicant.Id = Applicants.Max(a => a.Id) + 1;
+            Applicants.Add(applicant);
+            return Task.FromResult(applicant);
+        }
+
+        /// <summary>
         /// Обработка заявки на поступление
         /// </summary>
         public Task<Application?> ProcessApplicationAsync(CreateApplicationRequest request)

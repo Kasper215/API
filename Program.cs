@@ -4,6 +4,18 @@ using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Добавление CORS для доступа с Netlify / локального фронтенда
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
+// Добавление фабрики HTTP-клиентов для внешних запросов
+builder.Services.AddHttpClient();
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -39,6 +51,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAll"); // Включаем CORS
+app.UseStaticFiles();    // Раздача index.html из папки wwwroot
 
 app.UseHttpsRedirection();
 

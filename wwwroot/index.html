@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приёмная кампания - Интеграционная платформа</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #ec4899;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-color);
+            background: #f9fafb;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #db2777 100%);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            display: none;
+            animation: fadeIn 0.4s ease;
+            line-height: 1.5;
+        }
+
+        .result-box.success {
+            display: block;
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #34d399;
+        }
+
+        .result-box.error {
+            display: block;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Loading spinner for buttons */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1>Университет будущего</h1>
+            <p>Платформа автоматизированной приёмной кампании</p>
+        </div>
+        
+        <div class="grid-container">
+            <!-- Регистрация -->
+            <div class="card">
+                <h3>📝 Регистрация абитуриента</h3>
+                
+                <div class="form-group">
+                    <label>Фамилия</label>
+                    <input type="text" id="lastName" placeholder="Иванов">
+                </div>
+                <div class="form-group">
+                    <label>Имя</label>
+                    <input type="text" id="firstName" placeholder="Иван">
+                </div>
+                <div class="form-group">
+                    <label>Отчество</label>
+                    <input type="text" id="patronymic" placeholder="Иванович">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                    <div class="form-group">
+                        <label>Аттестат</label>
+                        <input type="number" id="certificateScore" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label>Русский</label>
+                        <input type="number" id="russianScore" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label>Профиль</label>
+                        <input type="number" id="profileScore" placeholder="0-100">
+                    </div>
+                </div>
+
+                <button id="btnReg" onclick="createApplicant()">Создать профиль</button>
+                <div id="regResult" class="result-box"></div>
+            </div>
+
+            <!-- Подача заявки -->
+            <div class="card" style="animation-delay: 0.2s;">
+                <h3>🎓 Подача заявки</h3>
+                
+                <div class="form-group">
+                    <label>ID Абитуриента</label>
+                    <input type="number" id="applicantId" placeholder="Введите полученный ID">
+                </div>
+                
+                <div class="form-group">
+                    <label>Приоритет №1</label>
+                    <select id="specialty1">
+                        <option value="Информатика и вычислительная техника">Информатика и вычислительная техника (Балл: 80)</option>
+                        <option value="Информационная безопасность">Информационная безопасность (Балл: 85)</option>
+                        <option value="Радиофизика">Радиофизика (Балл: 70)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Приоритет №2</label>
+                    <select id="specialty2">
+                        <option value="Информационная безопасность">Информационная безопасность (Балл: 85)</option>
+                        <option value="Информатика и вычислительная техника">Информатика и вычислительная техника (Балл: 80)</option>
+                        <option value="Радиофизика">Радиофизика (Балл: 70)</option>
+                    </select>
+                </div>
+
+                <button id="btnSubmit" onclick="submitApplication()" style="margin-top: 1.6rem;">Отправить в комиссию</button>
+                <div id="appResult" class="result-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:5192/api";
+
+        function showResult(elementId, isSuccess, message) {
+            const el = document.getElementById(elementId);
+            el.className = 'result-box ' + (isSuccess ? 'success' : 'error');
+            el.innerHTML = message;
+        }
+
+        function setButtonLoading(btnId, isLoading) {
+            const btn = document.getElementById(btnId);
+            if (isLoading) {
+                btn.classList.add('btn-loading');
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+            }
+        }
+
+        async function createApplicant() {
+            setButtonLoading('btnReg', true);
+            const data = {
+                lastName: document.getElementById('lastName').value,
+                firstName: document.getElementById('firstName').value,
+                patronymic: document.getElementById('patronymic').value,
+                certificateScore: parseFloat(document.getElementById('certificateScore').value) || 0,
+                russianScore: parseFloat(document.getElementById('russianScore').value) || 0,
+                subjectScore: parseFloat(document.getElementById('profileScore').value) || 0
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/applicants`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.title || result.Message || "Ошибка при регистрации");
+                
+                showResult('regResult', true, `✅ Абитуриент успешно создан!<br><strong>Ваш ID: ${result.id}</strong><br><em>Итоговый балл: ${result.totalScore}</em>`);
+                
+                // Автозаполнение ID во второй форме для удобства
+                document.getElementById('applicantId').value = result.id;
+            } catch (error) {
+                showResult('regResult', false, `❌ Ошибка: ${error.message}`);
+            } finally {
+                setButtonLoading('btnReg', false);
+            }
+        }
+
+        async function submitApplication() {
+            setButtonLoading('btnSubmit', true);
+            const data = {
+                applicantId: parseInt(document.getElementById('applicantId').value),
+                specialty1: document.getElementById('specialty1').value,
+                specialty2: document.getElementById('specialty2').value
+            };
+
+            if (!data.applicantId) {
+                showResult('appResult', false, "❌ Пожалуйста, введите ID абитуриента");
+                setButtonLoading('btnSubmit', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/applications`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || result.Message || result.title || "Ошибка при подаче заявки");
+                
+                showResult('appResult', true, `🎓 <strong>${result.result}</strong><br><br>${result.notificationText}`);
+            } catch (error) {
+                showResult('appResult', false, `❌ Ошибка: ${error.message}`);
+            } finally {
+                setButtonLoading('btnSubmit', false);
+            }
+        }
+    </script>
+</body>
+</html>
