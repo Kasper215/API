@@ -4,6 +4,10 @@ using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Настройка порта для развертывания на Amvera
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://*:{port}");
+
 // Добавление CORS для доступа с Netlify / локального фронтенда
 builder.Services.AddCors(options =>
 {
