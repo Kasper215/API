@@ -1,12 +1,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
-COPY . ./
-RUN dotnet publish -c Release -o /publish
+WORKDIR /src
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Копируем только .csproj и восстанавливаем зависимости
+COPY WebApplication1.csproj .
+RUN dotnet restore
+
+# Копируем всё остальное и публикуем
+COPY . .
+RUN dotnet publish WebApplication1.csproj -c Release -o /publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /publish ./
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV PORT=8080
+COPY --from=build /publish .
+
+ENV ASPNETCORE_URLS=http://*:8080
 EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "WebApplication1.dll"]
