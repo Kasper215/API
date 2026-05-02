@@ -1,15 +1,8 @@
 meta:
-  version: 1.0
-  toolchain: dotnet
-
-environment:
-  - name: ASPNETCORE_ENVIRONMENT
-    value: Production
-  - name: PORT
-    value: "8080"
-
-build:
-  command: dotnet publish -c Release -o /publish
+  environment: docker
+  toolchain:
+    name: docker
+    version: latest
 
 run:
-  command: dotnet /publish/WebApplication1.dll
+  containerPort: 8080
