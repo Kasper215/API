@@ -1,0 +1,11 @@
+environment:
+  - name: ASPNETCORE_ENVIRONMENT
+    value: Production
+  - name: PORT
+    value: "8080"
+
+build:
+  command: dotnet publish -c Release -o /publish
+
+run:
+  command: dotnet /publish/WebApplication1.dll
